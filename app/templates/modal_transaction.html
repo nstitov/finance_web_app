@@ -1,0 +1,58 @@
+<div id="transaction-modal" class="modal hidden">
+    <div class="modal-content">
+        <button
+            type="button"
+            class="modal-close"
+            onclick="closeTransactionModal()"
+            aria-label="Close modal"
+        >
+            ×
+        </button>
+
+        <h2 id="transaction-modal-title">Add transaction</h2>
+
+        <form id="transaction-form" method="post">
+            <input type="hidden" id="transaction_id" name="transaction_id">
+
+            <label>
+                Title
+                <input type="text" id="title" name="title" required>
+            </label>
+
+            <label>
+                Price
+                <input type="number" id="unit_price" name="unit_price" required>
+            </label>
+
+            <label>
+                Category
+                <select id="category_id", name="category_id", required>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Amount
+                <input type="number" id="amount" name="amount" step="1" required>
+            </label>
+
+            <label>
+                Description
+                <input type="text" id="comment" name="comment">
+            </label>
+
+            <label>
+                Date
+                <input type="date" id="spent_at" name="spent_at" required>
+            </label>
+
+            <button id="transaction-submit-button" type="submit">
+                Save
+            </button>
+        </form>
+    </div>
+</div>

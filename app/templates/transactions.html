@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Transactions</h1>
+
+{% if error %}
+    <div class="error">
+        {{ error }}
+    </div>
+{% endif %}
+
+<button type="button" onclick="openCreateTransactionModal()">
+    Add transaction
+</button>
+
+<h2>Performed transactions</h2>
+
+{% if transactions %}
+    <table>
+        <thead>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Price</th>
+            <th>Purchase date</th>
+            <th>Category</th>
+        </thead>
+
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.title }}</td>
+                    <td>{{ transaction.amount | int }}</td>
+                    <td>{{ transaction.unit_price }} {{ transaction.currency }}</td>
+                    <td>{{ transaction.spent_at.strftime("%Y-%m-%d ") }}</td>
+                    <td>{{ transaction.category.name }}</td>
+                    <td>
+                        <div>
+                            <form
+                                method="post"
+                                action="/transactions/{{ transaction.id }}/delete"
+                                onsubmit="return confirm('Delete transaction {{ transaction.title }}?');"
+                            >
+                                <button class="delete-button" type="submit">
+                                    Delete
+                                </button>
+                            </form>
+
+                            <button
+                                class="modify-button"
+                                type="button"
+                                onclick="openEditTransactionModal({{ transaction | tojson | safe }})"
+                            >
+                                Edit
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No transactions yet</p>
+{% endif %}
+
+{% endblock %}
