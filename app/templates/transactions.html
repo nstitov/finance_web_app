@@ -32,7 +32,7 @@
                     <td>{{ transaction.title }}</td>
                     <td>{{ transaction.amount | int }}</td>
                     <td>{{ transaction.unit_price }} {{ transaction.currency }}</td>
-                    <td>{{ transaction.spent_at.strftime("%Y-%m-%d ") }}</td>
+                    <td>{{ (transaction.spent_at | to_datetime).strftime("%Y-%m-%d") }}</td>
                     <td>{{ transaction.category.name }}</td>
                     <td>
                         <div>
@@ -49,7 +49,7 @@
                             <button
                                 class="modify-button"
                                 type="button"
-                                onclick="openEditTransactionModal({{ transaction | tojson | safe }})"
+                                onclick='openEditTransactionModal({{ transaction | tojson | safe }})'
                             >
                                 Edit
                             </button>
@@ -63,4 +63,5 @@
     <p>No transactions yet</p>
 {% endif %}
 
+{% include "modal_transaction.html" %}
 {% endblock %}

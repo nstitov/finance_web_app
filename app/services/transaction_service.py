@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 
 from app.models.transaction import Transaction
-from app.schemas.transaction import TransactionCreate, TransactionDelete
+from app.schemas.transaction import TransactionCreate, TransactionDelete, TransactionUpdate
 
 
 def get_all_transactions_by_user(db: Session, user_id: int) -> list[Transaction]:
@@ -25,6 +25,33 @@ def create_transaction(db: Session, transaction_create: TransactionCreate) -> Tr
         transaction.comment = transaction_create.comment
 
     db.add(transaction)
+    db.commit()
+    db.refresh(transaction)
+
+    return transaction
+
+
+def update_transaction(db: Session, transaction_update: TransactionUpdate) -> Transaction | None:
+    transaction = (
+        db.query(Transaction)
+        .filter(Transaction.id == transaction_update.id, Transaction.user_id == transaction_update.user_id)
+        .first()
+    )
+
+    if transaction is None:
+        return None
+
+    transaction.category_id = transaction_update.category_id
+    transaction.title = transaction_update.title
+    transaction.amount = transaction_update.amount
+    transaction.unit_price = transaction_update.unit_price
+    transaction.comment = transaction_update.comment
+
+    if transaction_update.currency is not None:
+        transaction.currency = transaction_update.currency
+    if transaction_update.spent_at is not None:
+        transaction.spent_at = transaction_update.spent_at
+
     db.commit()
     db.refresh(transaction)
 

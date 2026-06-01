@@ -1,0 +1,199 @@
+.modal {
+    position: fixed;
+    inset: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+
+    z-index: 1000;
+
+    padding: 20px;
+}
+
+/* показываем только если НЕ hidden */
+.modal:not(.hidden) {
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+/* окно модалки */
+.modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 520px;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+
+    animation: modalAppear 0.15s ease-out;
+}
+
+/* анимация появления */
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* заголовок */
+#transaction-modal-title {
+    margin: 0 0 24px 0;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* форма */
+#transaction-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* контейнер поля */
+#transaction-form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* label */
+#transaction-form label {
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #374151;
+}
+
+/* inputs */
+#transaction-form input,
+#transaction-form select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+
+    padding: 12px 14px;
+
+    font-size: 15px;
+
+    background: #fff;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+/* focus */
+#transaction-form input:focus,
+#transaction-form select:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* price + currency в одну строку */
+.price-row {
+    display: flex;
+    gap: 12px;
+}
+
+.price-row input:first-child {
+    width: 10px
+}
+
+.price-row input:last-child {
+    width: 10px;
+}
+
+/* кнопка submit */
+#transaction-submit-button {
+    margin-top: 8px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #2563eb;
+    color: white;
+
+    padding: 14px 18px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+}
+
+#transaction-submit-button:hover {
+    background: #1d4ed8;
+}
+
+#transaction-submit-button:active {
+    transform: scale(0.98);
+}
+
+/* кнопка закрытия */
+.modal-close {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+
+    font-size: 24px;
+    line-height: 1;
+
+    color: #6b7280;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.modal-close:focus-visible {
+    outline: 2px solid #93c5fd;
+}
