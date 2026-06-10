@@ -19,7 +19,7 @@
         required
     >
 
-    <button class="sumbit-button" type="submit">
+    <button class="submit-button" type="submit">
         Add
     </button>
 </form>
@@ -39,10 +39,10 @@
                     <td>{{ category.name }}</td>
                     <td>
                         <form
+                            class="inline-form"
                             method="post"
                             action="/categories/{{ category.id }}/delete"
                             onsubmit="return confirm('Delete category {{ category.name }}?');"
-                            style="margin 0;"
                         >
                             <button class="delete-button" type="submit">
                                 Delete

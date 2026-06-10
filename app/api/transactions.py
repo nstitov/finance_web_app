@@ -16,7 +16,7 @@ from app.services import category_service, common_service, transaction_service
 router = APIRouter(prefix="/transactions")
 
 TEMP_USER_ID = 1
-CURRENCIES = ["AMD", "RUB", "EUR", "USD"]
+CURRENCIES = ["EUR", "AMD", "RUB", "USD"]
 
 
 @router.get("/")

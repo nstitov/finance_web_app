@@ -1,0 +1,45 @@
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dashboard-summary-item {
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.dashboard-summary-item p {
+    margin: 8px 0 0;
+    font-size: 20px;
+}
+
+.dashboard-progress {
+    display: inline-block;
+    width: 120px;
+    height: 8px;
+    margin-right: 8px;
+    border: 0;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.dashboard-progress::-webkit-progress-bar {
+    border-radius: 999px;
+    background: #e5e7eb;
+}
+
+.dashboard-progress::-webkit-progress-value {
+    border-radius: 999px;
+    background: #2563eb;
+}
+
+.dashboard-progress::-moz-progress-bar {
+    border-radius: 999px;
+    background: #2563eb;
+}

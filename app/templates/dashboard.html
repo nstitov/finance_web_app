@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h1>Dashboard</h1>
+
+{% if error %}
+    <div class="error">
+        {{ error }}
+    </div>
+{% endif %}
+
+<section>
+    <h2>Period</h2>
+
+    <form method="get" action="/dashboard">
+        <label for="month">Month</label>
+        <input
+            type="month"
+            id="month"
+            name="month"
+            value="{{ selected_month }}"
+        >
+        <button class="submit-button" type="submit">
+            Apply
+        </button>
+    </form>
+</section>
+
+<section>
+    <h2>Monthly overview</h2>
+
+    <div class="dashboard-summary">
+        <div class="dashboard-summary-item">
+            <strong>Total spent</strong>
+            <p>{{ total_spent | round(2, "common") | default(0) }} {{ main_currency | default("EUR") }}</p>
+        </div>
+
+        <div class="dashboard-summary-item">
+            <strong>Transactions</strong>
+            <p>{{ transactions_count | default(0) }}</p>
+        </div>
+
+        <div class="dashboard-summary-item">
+            <strong>Average transaction</strong>
+            <p>{{ average_transaction | round(2, "common") | default(0) }} {{ main_currency | default("EUR") }}</p>
+        </div>
+
+        <div class="dashboard-summary-item">
+            <strong>Top category</strong>
+            <p>{{ top_category if top_category else "No data" }}</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Spending by category</h2>
+
+    {% if category_stats %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Transactions</th>
+                    <th>Total</th>
+                    <th>Share</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for category in category_stats %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.transactions_count }}</td>
+                        <td>{{ category.total_spent | round(2, "common") }} {{ category.currency | default(main_currency | default("EUR")) }}</td>
+                        <td>
+                            <progress
+                                class="dashboard-progress"
+                                max="100"
+                                value="{{ category.share_percent }}"
+                            ></progress>
+
+                            {{ category.share_percent | round(2, "common") }}%
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No category data for this period</p>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Recent transactions</h2>
+
+    {% if recent_transactions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for transaction in recent_transactions %}
+                    <tr>
+                        <td>{{ transaction.title }}</td>
+                        <td>{{ transaction.category.name if transaction.category else "No category" }}</td>
+                        <td>{{ (transaction.spent_at | to_datetime).strftime("%Y-%m-%d") }}</td>
+                        <td>
+                            {{ transaction.total | default(transaction.amount * transaction.unit_price) }}
+                            {{ transaction.currency }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No transactions for this period</p>
+    {% endif %}
+</section>
+
+{% endblock %}

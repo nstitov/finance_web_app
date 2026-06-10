@@ -2,3 +2,4 @@ finance.db
 __pycache__/
 venv/
 .vscode/
+db_backups/
