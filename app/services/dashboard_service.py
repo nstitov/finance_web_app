@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session, joinedload
 
@@ -9,7 +9,7 @@ from app.models.transaction import Transaction
 def get_month_transactions(db: Session, user_id: int, month_year: str) -> list[Transaction]:
     year, month = map(int, month_year.split("-"))
     start_dt = datetime(year=year, month=month, day=1)
-    finish_dt = datetime(year=year, month=month + 1, day=1)
+    finish_dt = datetime(year=year + (month == 12), month=1 if month == 12 else month + 1, day=1)
     return (
         db.query(Transaction)
         .filter(Transaction.user_id == user_id, Transaction.spent_at >= start_dt, Transaction.spent_at < finish_dt)
@@ -30,8 +30,8 @@ class CategoryStatistic:
 class MonthStatistic:
     total_spent: float
     transactions_count: int
-    average_trasnsaction: float
-    top_category: str
+    average_transaction: float
+    top_category: CategoryStatistic | None
     categories_statistic: list[CategoryStatistic]
     recent_transactions: list[Transaction]
 
@@ -46,8 +46,13 @@ def calculate_month_statistic(transactions: list[Transaction]) -> MonthStatistic
         transaction_prices.append(transaction_price)
         total_spent += transaction_price
 
-        transactions_by_category.setdefault(tr.category.name, [])
-        transactions_by_category[tr.category.name].append(transaction_price)
+        if tr.category:
+            category_name = tr.category.name
+        else:
+            category_name = "Uncategorized"
+
+        transactions_by_category.setdefault(category_name, [])
+        transactions_by_category[category_name].append(transaction_price)
 
     categories_statistic = []
     for name, trs in transactions_by_category.items():
@@ -63,7 +68,7 @@ def calculate_month_statistic(transactions: list[Transaction]) -> MonthStatistic
     statistic = MonthStatistic(
         total_spent=total_spent,
         transactions_count=len(transactions),
-        average_trasnsaction=sum(transaction_prices) / len(transaction_prices) if transaction_prices else 0,
+        average_transaction=sum(transaction_prices) / len(transaction_prices) if transaction_prices else 0,
         top_category=max(categories_statistic, key=lambda stat: stat.total_spent) if categories_statistic else None,
         categories_statistic=categories_statistic,
         recent_transactions=transactions,
