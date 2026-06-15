@@ -3,6 +3,13 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 
 
+def get_current_user(db: Session) -> User:
+    # TODO: return real user
+    user = User()
+    user.id = 1
+    return user
+
+
 def get_all_users(db: Session) -> list[User]:
     return db.query(User).all()
 

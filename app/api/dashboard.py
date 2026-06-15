@@ -3,13 +3,12 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.orm import Session
 
-import app.services.common_service as cs
-import app.services.dashboard_service as ds
+import app.services.common_service as coms
+import app.services.dashboard_service as das
+import app.services.user_service as uss
 from app.db.base import get_db
 
 router = APIRouter(prefix="/dashboard")
-
-TEMP_USER_ID = 1
 
 
 @router.get("/")
@@ -21,8 +20,9 @@ def get_dashboard(
     if not month:
         month = datetime.utcnow().strftime("%Y-%m")
 
-    transactions = ds.get_month_transactions(db, TEMP_USER_ID, month)
-    month_statistic = ds.calculate_month_statistic(transactions)
+    current_user = uss.get_current_user(db)
+    transactions = das.get_month_transactions(db, current_user.id, month)
+    month_statistic = das.calculate_month_statistic(transactions)
 
     return request.app.state.templates.TemplateResponse(
         request=request,
@@ -34,7 +34,7 @@ def get_dashboard(
             "average_transaction": month_statistic.average_transaction,
             "top_category": month_statistic.top_category.name if month_statistic.top_category else None,
             "category_stats": month_statistic.categories_statistic,
-            "recent_transactions": [cs.transaction_to_json(tr) for tr in month_statistic.recent_transactions],
+            "recent_transactions": [coms.transaction_to_json(tr) for tr in month_statistic.recent_transactions],
             "error": None,
         },
         status_code=status.HTTP_200_OK,
